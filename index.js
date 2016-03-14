@@ -12,7 +12,7 @@ function init() {
     getFirebase().child('subscription_ids').on('value', function(snapshot) {
         _subIds = formatSubIdsFromSnapshot(snapshot.val());
     });
-    
+
     // Listen for new questions, ignore initial batch by filtering out existing questions
     getFirebase().child('questions').orderByChild('time').startAt(Date.now()).on('child_added', function(snapshot) {
         console.log('Child added', snapshot.val());
@@ -26,6 +26,7 @@ function notifySubscribers(question) {
         title: 'Computer ' + question.computer_number + ' asked a question.',
         icon: 'images/icon.png'
     });
+    message.addData('computer_number', question.computer_number);
     _gcmSender.send(message, { registrationTokens: _subIds }, function(err, response) {
        if (err) {
            console.error(err);
