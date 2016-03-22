@@ -21,12 +21,12 @@ function init() {
 }
 
 function notifySubscribers(question) {
-    var message = new gcm.Message();
-    message.addNotification({
-        title: 'Computer ' + question.computer_number + ' asked a question.',
-        icon: 'images/icon.png'
+    var message = new gcm.Message({
+        priority: 'high',
+        data: {
+            computer_number: question.computer_number
+        }
     });
-    message.addData('computer_number', question.computer_number);
     _gcmSender.send(message, { registrationTokens: _subIds }, function(err, response) {
        if (err) {
            console.error(err);
